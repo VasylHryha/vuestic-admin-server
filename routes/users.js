@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getUsers, getSingleUser, createUser, updateUser, deleteUser } = require('../controllers/user.js');
+const { getUsersController, getSingleUserController, createUserController, updateUserController, deleteUserController } = require('../controllers/users.js');
 
 /**
  * @route GET /users
@@ -24,10 +24,10 @@ const { getUsers, getSingleUser, createUser, updateUser, deleteUser } = require(
  *     "projects": ["project1", "project2"],
  *     "isActive": true
  *   },
- *   // ... 
+ *   // ...
  * ]
  */
-router.get('/', getUsers);
+router.get('/', getUsersController);
 
 /**
  * @route GET /users/:id
@@ -55,7 +55,7 @@ router.get('/', getUsers);
  *   "message": "User not found"
  * }
  */
-router.get('/:id', getSingleUser);
+router.get('/:id', getSingleUserController);
 
 /**
  * @route POST /users
@@ -88,7 +88,7 @@ router.get('/:id', getSingleUser);
  *   "isActive": true
  * }
  */
-router.post('/', createUser);
+router.post('/', createUserController);
 
 /**
  * @route PUT /users/:id
@@ -123,7 +123,7 @@ router.post('/', createUser);
  *   "message": "User not found"
  * }
  */
-router.put('/:id', updateUser);
+router.put('/:id', updateUserController);
 
 /**
  * @route DELETE /users/:id
@@ -143,6 +143,6 @@ router.put('/:id', updateUser);
  *   "message": "User not found"
  * }
  */
-router.delete('/:id', deleteUser);
+router.delete('/:id', deleteUserController);
 
 module.exports = router;

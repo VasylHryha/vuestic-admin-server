@@ -1,8 +1,8 @@
-const userModel = require('../models/user');
+const usersModel = require('../models/users');
 
-const getUsers = async (req, res) => {
+const getUsersController = async (req, res) => {
   try {
-    const users = await userModel.getAllUsers();
+    const users = await usersModel.getAllUsers();
     const page = parseInt(req.query.page) || 1;
     const pageSize = parseInt(req.query.pageSize) || 10;
     const startIndex = (page - 1) * pageSize;
@@ -21,9 +21,9 @@ const getUsers = async (req, res) => {
   }
 };
 
-const getSingleUser = async (req, res) => {
+const getSingleUserController = async (req, res) => {
   try {
-    const user = await userModel.getUserById(req.params.id);
+    const user = await usersModel.getUserById(req.params.id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -33,18 +33,18 @@ const getSingleUser = async (req, res) => {
   }
 };
 
-const createUser = async (req, res) => {
+const createUserController = async (req, res) => {
   try {
-    const newUser = await userModel.createUser(req.body);
+    const newUser = await usersModel.createUser(req.body);
     res.status(201).json(newUser);
   } catch (error) {
     res.status(500).json({ message: 'Error creating user', error: error.message });
   }
 };
 
-const updateUser = async (req, res) => {
+const updateUserController = async (req, res) => {
   try {
-    const updatedUser = await userModel.updateUser(req.params.id, req.body);
+    const updatedUser = await usersModel.updateUser(req.params.id, req.body);
     if (!updatedUser) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -54,9 +54,9 @@ const updateUser = async (req, res) => {
   }
 };
 
-const deleteUser = async (req, res) => {
+const deleteUserController = async (req, res) => {
   try {
-    const deleted = await userModel.deleteUser(req.params.id);
+    const deleted = await usersModel.deleteUser(req.params.id);
     if (!deleted) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -66,4 +66,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { getUsers, getSingleUser, createUser, updateUser, deleteUser };
+module.exports = { getUsersController, getSingleUserController, createUserController, updateUserController, deleteUserController };
