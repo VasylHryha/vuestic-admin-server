@@ -14,9 +14,9 @@ Based on MVC pattern, the project is organized into the following directories:
 │   └── users.js
 ├── controllers/
 │   ├── root.js
-│   └── user.js
+│   └── users.js
 ├── models/
-│   └── user.js
+│   └── users.js
 ├── db/
 │   └── users.json
 ├── views/
