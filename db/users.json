@@ -1,0 +1,162 @@
+[
+  {
+    "id": "1",
+    "fullName": "Patrik Radkow",
+    "email": "magicpan@example.gg",
+    "username": "magicpan",
+    "role": "USER",
+    "projects": ["Galileo", "Website redesign", "Mobile app"],
+    "isActive": true,
+    "avatar": "https://ui-avatars.com/api/?name=PR&background=4e73df&color=fff"
+  },
+  {
+    "id": "2",
+    "fullName": "Martin Hoff",
+    "email": "niceadmin@mail.com",
+    "username": "admin",
+    "role": "ADMIN",
+    "projects": ["Springfield media", "Sky High Architecture", "Data analysis", "Marketing campaign"],
+    "isActive": true,
+    "avatar": "https://ui-avatars.com/api/?name=MH&background=1cc88a&color=fff"
+  },
+  {
+    "id": "3",
+    "fullName": "Liz Macintosh",
+    "email": "ebrown@gmail.com",
+    "username": "ebrown",
+    "role": "USER",
+    "projects": ["Jenkins", "Galileo", "Cloud migration", "AI integration", "UX research", "Mobile app", "Frontend revamp", "Backend optimization"],
+    "isActive": true,
+    "avatar": "https://ui-avatars.com/api/?name=LM&background=36b9cc&color=fff"
+  },
+  {
+    "id": "4",
+    "fullName": "M2",
+    "email": "mrm@gmail.com",
+    "username": "mrm",
+    "role": "OWNER",
+    "projects": ["Mood board", "Jenkins", "Project management", "Team building", "Strategic planning"],
+    "isActive": true,
+    "avatar": "https://ui-avatars.com/api/?name=M2&background=f6c23e&color=fff"
+  },
+  {
+    "id": "5",
+    "fullName": "Kevin Smith",
+    "email": "kevin@gmail.com",
+    "username": "kevin13",
+    "role": "USER",
+    "projects": ["Vuestic", "Mood board", "E-commerce platform", "Customer support", "Data visualization", "Mobile app"],
+    "isActive": true,
+    "avatar": "https://ui-avatars.com/api/?name=KS&background=e74a3b&color=fff"
+  },
+  {
+    "id": "6",
+    "fullName": "Martin Hoff",
+    "email": "martin@gmail.com",
+    "username": "martin3",
+    "role": "USER",
+    "projects": ["Toolset landing", "Design team project", "Branding refresh", "UI kit development"],
+    "isActive": true,
+    "avatar": "https://ui-avatars.com/api/?name=MH&background=858796&color=fff"
+  },
+  {
+    "id": "7",
+    "fullName": "John Doe",
+    "email": "john@mail.com",
+    "username": "john",
+    "role": "USER",
+    "projects": ["Jenkins", "Springfield media", "Code refactoring", "Performance optimization", "Security audit", "Documentation"],
+    "isActive": true,
+    "avatar": "https://ui-avatars.com/api/?name=JD&background=5a5c69&color=fff"
+  },
+  {
+    "id": "8",
+    "fullName": "Maksim Nedo",
+    "email": "maksim@epic.com",
+    "username": "maksim",
+    "role": "ADMIN",
+    "projects": ["Mood board", "Website redesign", "API development", "Database migration", "DevOps implementation", "Testing automation"],
+    "isActive": true,
+    "avatar": "https://ui-avatars.com/api/?name=MN&background=e74a3b&color=fff"
+  },
+  {
+    "id": "9",
+    "fullName": "Sarah Connor",
+    "email": "sconnor@skynet.com",
+    "username": "sconnor",
+    "role": "USER",
+    "projects": ["AI Safety", "Robotics", "Time Travel Logistics"],
+    "isActive": true,
+    "avatar": "https://ui-avatars.com/api/?name=SC&background=20c997&color=fff"
+  },
+  {
+    "id": "10",
+    "fullName": "Tony Stark",
+    "email": "tony@starkindustries.com",
+    "username": "ironman",
+    "role": "ADMIN",
+    "projects": ["Arc Reactor", "Suit Enhancements", "Clean Energy"],
+    "isActive": true,
+    "avatar": "https://ui-avatars.com/api/?name=TS&background=fd7e14&color=fff"
+  },
+  {
+    "id": "11",
+    "fullName": "Bruce Banner",
+    "email": "bbanner@avengers.org",
+    "username": "hulk",
+    "role": "USER",
+    "projects": ["Gamma Radiation Studies", "Anger Management App", "Super Soldier Serum"],
+    "isActive": true,
+    "avatar": "https://ui-avatars.com/api/?name=BB&background=6f42c1&color=fff"
+  },
+  {
+    "id": "12",
+    "fullName": "Peter Parker",
+    "email": "spidey@dailybugle.com",
+    "username": "webslinger",
+    "role": "USER",
+    "projects": ["Web Fluid Formula", "City Surveillance System", "Acrobatics Training Program"],
+    "isActive": true,
+    "avatar": "https://ui-avatars.com/api/?name=PP&background=e83e8c&color=fff"
+  },
+  {
+    "id": "13",
+    "fullName": "Diana Prince",
+    "email": "ww@themyscira.gov",
+    "username": "wonderwoman",
+    "role": "ADMIN",
+    "projects": ["Lasso of Truth", "Invisible Jet Maintenance", "Amazonian Archive Digitization"],
+    "isActive": true,
+    "avatar": "https://ui-avatars.com/api/?name=DP&background=fd7e14&color=fff"
+  },
+  {
+    "id": "14",
+    "fullName": "Clark Kent",
+    "email": "superman@dailyplanet.com",
+    "username": "ckent",
+    "role": "USER",
+    "projects": ["Kryptonian Language Preservation", "Solar Energy Absorption", "Metropolis Reconstruction"],
+    "isActive": true,
+    "avatar": "https://ui-avatars.com/api/?name=CK&background=6610f2&color=fff"
+  },
+  {
+    "id": "15",
+    "fullName": "Natasha Romanoff",
+    "email": "blackwidow@shield.gov",
+    "username": "nromanoff",
+    "role": "ADMIN",
+    "projects": ["Spy Network Management", "Infiltration Techniques", "Combat Training Simulator"],
+    "isActive": true,
+    "avatar": "https://ui-avatars.com/api/?name=NR&background=dc3545&color=fff"
+  },
+  {
+    "id": "16",
+    "fullName": "Steve Rogers",
+    "email": "cap@avengers.org",
+    "username": "capamerica",
+    "role": "USER",
+    "projects": ["Shield Aerodynamics", "1940s Cultural Integration", "Team Leadership Workshop"],
+    "isActive": true,
+    "avatar": "https://ui-avatars.com/api/?name=SR&background=007bff&color=fff"
+  }
+]

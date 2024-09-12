@@ -1,124 +1,259 @@
-require("dotenv").config();
-
 const express = require('express');
+const bodyParser = require('body-parser');
+const { v4: uuidv4 } = require('uuid');
 const fs = require('fs').promises;
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-const DATA_FILE = path.join(__dirname, 'tasks.json');
+app.use(bodyParser.json());
 
-app.use(express.json());
+const DB_DIR = path.join(__dirname, 'db');
+const DATA_FILE = path.join(DB_DIR, 'users.json');
 
-// Вспомогательная функция для чтения файла с задачами
-async function readTasks() {
+// Helper functions for file operations
+async function ensureDbDirectory() {
   try {
+    await fs.access(DB_DIR);
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      await fs.mkdir(DB_DIR);
+    } else {
+      throw error;
+    }
+  }
+}
+
+async function readUsersFromFile() {
+  try {
+    await ensureDbDirectory();
     const data = await fs.readFile(DATA_FILE, 'utf8');
     return JSON.parse(data);
   } catch (error) {
-    return [];
+    if (error.code === 'ENOENT') {
+      return [];
+    }
+    throw error;
   }
 }
 
-// Вспомогательная функция для записи задач в файл
-async function writeTasks(tasks) {
-  await fs.writeFile(DATA_FILE, JSON.stringify(tasks, null, 2));
+async function writeUsersToFile(users) {
+  await ensureDbDirectory();
+  await fs.writeFile(DATA_FILE, JSON.stringify(users, null, 2));
 }
 
-// CREATE: Создание новой задачи
-app.post('/tasks', async (req, res) => {
-  const tasks = await readTasks();
-  const newTask = {
-    id: tasks.length + 1,
-    title: req.body.title,
-    description: req.body.description,
-    completed: false
-  };
-  tasks.push(newTask);
-  await writeTasks(tasks);
-  res.status(201).json(newTask);
-});
+// Routes
 
-// READ: Получение всех задач
-app.get('/tasks', async (req, res) => {
-  const tasks = await readTasks();
-  res.json(tasks);
-});
+/**
+ * @route GET /users
+ * @description Get a list of users with pagination
+ * @query {number} page - Page number (default: 1)
+ * @query {number} pageSize - Number of items per page (default: 10)
+ * @returns {Array} Array of user objects
+ *
+ * @example
+ * // Request
+ * GET /users?page=2&pageSize=5
+ *
+ * // Response
+ * [
+ *   {
+ *     "id": "550e8400-e29b-41d4-a716-446655440000",
+ *     "fullName": "John Doe",
+ *     "email": "john@example.com",
+ *     "username": "johndoe",
+ *     "role": "USER",
+ *     "projects": ["project1", "project2"],
+ *     "isActive": true
+ *   },
+ *   // ... (4 more user objects)
+ * ]
+ */
+app.get('/users', async (req, res) => {
+  try {
+    const users = await readUsersFromFile();
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
+    const startIndex = (page - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const paginatedUsers = users.slice(startIndex, endIndex);
 
-// READ: Получение конкретной задачи по ID
-app.get('/tasks/:id', async (req, res) => {
-  const tasks = await readTasks();
-  const task = tasks.find(t => t.id === parseInt(req.params.id));
-  if (task) {
-    res.json(task);
-  } else {
-    res.status(404).json({ message: 'Task not found' });
+    // Добавляем заголовки для пагинации
+    res.set({
+      'X-Total-Count': users.length,
+      'X-Page': page,
+      'X-Page-Size': pageSize
+    });
+
+    res.json(paginatedUsers);
+  } catch (error) {
+    res.status(500).json({ message: 'Error reading users data', error: error.message });
   }
 });
 
-// UPDATE: Обновление задачи
-app.put('/tasks/:id', async (req, res) => {
-  const tasks = await readTasks();
-  const index = tasks.findIndex(t => t.id === parseInt(req.params.id));
-  if (index !== -1) {
-    tasks[index] = { ...tasks[index], ...req.body };
-    await writeTasks(tasks);
-    res.json(tasks[index]);
-  } else {
-    res.status(404).json({ message: 'Task not found' });
+/**
+ * @route GET /users/:id
+ * @description Get a single user by ID
+ * @param {string} id - User ID
+ * @returns {Object} User object if found, otherwise 404
+ *
+ * @example
+ * // Request
+ * GET /users/550e8400-e29b-41d4-a716-446655440000
+ *
+ * // Response (success)
+ * {
+ *   "id": "550e8400-e29b-41d4-a716-446655440000",
+ *   "fullName": "John Doe",
+ *   "email": "john@example.com",
+ *   "username": "johndoe",
+ *   "role": "USER",
+ *   "projects": ["project1", "project2"],
+ *   "isActive": true
+ * }
+ *
+ * // Response (not found)
+ * {
+ *   "message": "User not found"
+ * }
+ */
+app.get('/users/:id', async (req, res) => {
+  try {
+    const users = await readUsersFromFile();
+    const user = users.find(user => user.id === req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ message: 'Error reading user data', error: error.message });
   }
 });
 
-// DELETE: Удаление задачи
-app.delete('/tasks/:id', async (req, res) => {
-  const tasks = await readTasks();
-  const filteredTasks = tasks.filter(t => t.id !== parseInt(req.params.id));
-  if (tasks.length !== filteredTasks.length) {
-    await writeTasks(filteredTasks);
+/**
+ * @route POST /users
+ * @description Create a new user
+ * @body {Object} user - User object without ID
+ * @returns {Object} Created user object with generated ID
+ *
+ * @example
+ * // Request
+ * POST /users
+ * Content-Type: application/json
+ *
+ * {
+ *   "fullName": "Jane Smith",
+ *   "email": "jane@example.com",
+ *   "username": "janesmith",
+ *   "role": "ADMIN",
+ *   "projects": [],
+ *   "isActive": true
+ * }
+ *
+ * // Response
+ * {
+ *   "id": "7c0e9a5d-8e1f-4f7b-a53d-36c9f3e7a6b8",
+ *   "fullName": "Jane Smith",
+ *   "email": "jane@example.com",
+ *   "username": "janesmith",
+ *   "role": "ADMIN",
+ *   "projects": [],
+ *   "isActive": true
+ * }
+ */
+app.post('/users', async (req, res) => {
+  try {
+    const users = await readUsersFromFile();
+    const newUser = { ...req.body, id: uuidv4() };
+    users.push(newUser);
+    await writeUsersToFile(users);
+    res.status(201).json(newUser);
+  } catch (error) {
+    res.status(500).json({ message: 'Error creating user', error: error.message });
+  }
+});
+
+/**
+ * @route PUT /users/:id
+ * @description Update an existing user
+ * @param {string} id - User ID
+ * @body {Object} user - Partial user object with fields to update
+ * @returns {Object} Updated user object
+ *
+ * @example
+ * // Request
+ * PUT /users/7c0e9a5d-8e1f-4f7b-a53d-36c9f3e7a6b8
+ * Content-Type: application/json
+ *
+ * {
+ *   "fullName": "Jane Doe",
+ *   "isActive": false
+ * }
+ *
+ * // Response (success)
+ * {
+ *   "id": "7c0e9a5d-8e1f-4f7b-a53d-36c9f3e7a6b8",
+ *   "fullName": "Jane Doe",
+ *   "email": "jane@example.com",
+ *   "username": "janesmith",
+ *   "role": "ADMIN",
+ *   "projects": [],
+ *   "isActive": false
+ * }
+ *
+ * // Response (not found)
+ * {
+ *   "message": "User not found"
+ * }
+ */
+app.put('/users/:id', async (req, res) => {
+  try {
+    const users = await readUsersFromFile();
+    const userIndex = users.findIndex(user => user.id === req.params.id);
+    if (userIndex === -1) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    users[userIndex] = { ...users[userIndex], ...req.body };
+    await writeUsersToFile(users);
+    res.json(users[userIndex]);
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating user', error: error.message });
+  }
+});
+
+/**
+ * @route DELETE /users/:id
+ * @description Delete a user
+ * @param {string} id - User ID
+ * @returns {null} No content
+ *
+ * @example
+ * // Request
+ * DELETE /users/7c0e9a5d-8e1f-4f7b-a53d-36c9f3e7a6b8
+ *
+ * // Response (success)
+ * Status: 204 No Content
+ *
+ * // Response (not found)
+ * {
+ *   "message": "User not found"
+ * }
+ */
+app.delete('/users/:id', async (req, res) => {
+  try {
+    const users = await readUsersFromFile();
+    const userIndex = users.findIndex(user => user.id === req.params.id);
+    if (userIndex === -1) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    users.splice(userIndex, 1);
+    await writeUsersToFile(users);
     res.status(204).send();
-  } else {
-    res.status(404).json({ message: 'Task not found' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error deleting user', error: error.message });
   }
 });
 
-// Главная страница
-app.get('/', (req, res) => {
-  res.send(`
-    <html>
-      <head>
-        <title>REST API</title>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-          }
-          h1 {
-            color: #333;
-          }
-          p {
-            margin-bottom: 10px;
-          }
-          a {
-            color: #0066cc;
-            text-decoration: none;
-          }
-          a:hover {
-            text-decoration: underline;
-          }
-        </style>
-      </head>
-      <body>
-        <h1>Test project for REST API learning</h1>
-        <p>Use <a href="/tasks">/tasks</a> to check</p>
-        <p>&copy; Maxim</p>
-      </body>
-    </html>
-  `);
-});
-
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
