@@ -1,5 +1,7 @@
+const path = require('path');
+
 const getRoot = (req, res) => {
-  res.render('index');
+  res.sendFile(path.join(__dirname, '../views/index.html'));
 };
 
 module.exports = { getRoot };

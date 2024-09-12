@@ -11,5 +11,5 @@ app.set('view engine', 'ejs');
 app.set('views', './views');
 
 app.listen(PORT, () => {
-  console.log(`Сервер запущен на порту ${PORT}`);
+  console.log(`App is running on http://localhost:${PORT}`);
 });

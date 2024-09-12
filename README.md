@@ -102,7 +102,6 @@ This project is configured for deployment on Vercel as temporary solution. The `
 - express: Web application framework
 - dotenv: For loading environment variables
 - body-parser: Middleware for parsing request bodies
-- ejs: Templating engine for rendering views
 - uuid: For generating unique identifiers
 
 For a complete list of dependencies, refer to the `package.json` file.
