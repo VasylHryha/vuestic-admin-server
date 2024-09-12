@@ -7,9 +7,6 @@ const app = express();
 app.use(bodyParser.json());
 app.use(router);
 
-app.set('view engine', 'ejs');
-app.set('views', './views');
-
 app.listen(PORT, () => {
   console.log(`App is running on http://localhost:${PORT}`);
 });
