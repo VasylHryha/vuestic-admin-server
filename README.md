@@ -91,7 +91,7 @@ More details see in `route/` folder
 
 ## Deployment
 
-This project is configured for deployment on Vercel as temporary solution. The `vercel.json` file provides the necessary settings.
+This project is configured for deployment on Vercel as temporary solution. The `vercel.json` file provides the necessary settings. Current domain is (node-js-demo-rho.vercel.app)[https://node-js-demo-rho.vercel.app/]
 
 ## Environment Variables
 
