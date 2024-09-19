@@ -1,4 +1,4 @@
-const usersModel = require('../models/users');
+const usersModel = require('../db/supabase/users.js');
 
 const getUsersController = async (req, res) => {
   try {

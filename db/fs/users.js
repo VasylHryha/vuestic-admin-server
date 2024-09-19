@@ -2,7 +2,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 
-const DB_DIR = path.join(__dirname, '..', 'db');
+const DB_DIR = path.join(__dirname, '../..', 'mockData');
 const DATA_FILE = path.join(DB_DIR, 'users.json');
 
 async function ensureDbDirectory() {
