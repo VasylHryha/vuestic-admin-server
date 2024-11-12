@@ -14,6 +14,11 @@ app.use((req, res, next)=> {
 	next();
 });
 
+app.use((req, res, next) => {
+	res.setHeader('Access-Control-Allow-Origin', 'https://admin-demo.vuestic.dev/')
+	next();
+});
+
 app.use(bodyParser.json());
 app.use(router);
 
