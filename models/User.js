@@ -28,7 +28,8 @@ class User {
 		role = 'USER',
 		projects = [],
 		isActive = true,
-		avatar
+		avatar,
+		notes
 	}) {
 		this.id = id
 		this.fullName = fullName
@@ -38,6 +39,7 @@ class User {
 		this.projects = projects
 		this.isActive = isActive
 		this.avatar = avatar
+		this.notes = notes
 	}
 
 	static toResponse(user) {

@@ -4,7 +4,7 @@ const getUsersController = async (req, res) => {
   try {
     const users = await usersModel.getAllUsers();
     const page = parseInt(req.query.page) || 1;
-    const pageSize = parseInt(req.query.pageSize) || 10;
+    const pageSize = parseInt(req.query.pageSize) || users.length;
     const startIndex = (page - 1) * pageSize;
     const endIndex = startIndex + pageSize;
     const paginatedUsers = users.slice(startIndex, endIndex);
