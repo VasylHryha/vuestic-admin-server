@@ -1,12 +1,18 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { getUsersController, getSingleUserController, createUserController, updateUserController, deleteUserController } = require('../controllers/users.js');
+const {
+	getUsersController,
+	getSingleUserController,
+	createUserController,
+	updateUserController,
+	deleteUserController,
+} = require("../controllers/users.js");
 
 /**
  * @route GET /users
  * @description Get a list of users with pagination
  * @query {number} page - Page number (default: 1)
- * @query {number} pageSize - Number of items per page (default: 10)
+ * @query {number} pageSize - Number of items per page (default: null)
  * @returns {Array} Array of user objects
  *
  * @example
@@ -16,18 +22,24 @@ const { getUsersController, getSingleUserController, createUserController, updat
  * // Response
  * [
  *   {
- *     "id": "550e8400-e29b-41d4-a716-446655440000",
- *     "fullName": "John Doe",
- *     "email": "john@example.com",
- *     "username": "johndoe",
- *     "role": "USER",
- *     "projects": ["project1", "project2"],
- *     "isActive": true
- *   },
+ * 	   "id": "339cbaac-2731-47a6-b0bb-e68be14addb9",
+ * 	   "email": "magicpan@example.gg",
+ * 	   "fullname": "Patrik Radkow",
+ * 	   "username": "magicpan",
+ * 	   "role": "user",
+ * 	   "projects": [
+ * 		   "1e7b566f-27c3-41c9-9a42-a10e3231671c"
+ * 	   ],
+ * 	   "active": true,
+ * 	   "avatar": "https://ui-avatars.com/api/?name=PR&background=4e73df&color=fff",
+ * 	   "notes": null,
+ * 	   "created_at": "2016-08-17",
+ * 	   "updated_at": null
+ *   }
  *   // ...
  * ]
  */
-router.get('/', getUsersController);
+router.get("/", getUsersController);
 
 /**
  * @route GET /users/:id
@@ -37,25 +49,31 @@ router.get('/', getUsersController);
  *
  * @example
  * // Request
- * GET /users/550e8400-e29b-41d4-a716-446655440000
+ * GET /users/339cbaac-2731-47a6-b0bb-e68be14addb9
  *
  * // Response (success)
- * {
- *   "id": "550e8400-e29b-41d4-a716-446655440000",
- *   "fullName": "John Doe",
- *   "email": "john@example.com",
- *   "username": "johndoe",
- *   "role": "USER",
- *   "projects": ["project1", "project2"],
- *   "isActive": true
- * }
+ *  {
+ * 	   "id": "339cbaac-2731-47a6-b0bb-e68be14addb9",
+ * 	   "email": "magicpan@example.gg",
+ * 	   "fullname": "Patrik Radkow",
+ * 	   "username": "magicpan",
+ * 	   "role": "user",
+ * 	   "projects": [
+ * 		   "1e7b566f-27c3-41c9-9a42-a10e3231671c"
+ * 	   ],
+ * 	   "active": true,
+ * 	   "avatar": "https://ui-avatars.com/api/?name=PR&background=4e73df&color=fff",
+ * 	   "notes": null,
+ * 	   "created_at": "2016-08-17",
+ * 	   "updated_at": null
+ *  }
  *
  * // Response (not found)
  * {
  *   "message": "User not found"
  * }
  */
-router.get('/:id', getSingleUserController);
+router.get("/:id", getSingleUserController);
 
 /**
  * @route POST /users
@@ -69,26 +87,32 @@ router.get('/:id', getSingleUserController);
  * Content-Type: application/json
  *
  * {
- *   "fullName": "Jane Smith",
+ *   "fullname": "Jane Smith",
  *   "email": "jane@example.com",
  *   "username": "janesmith",
- *   "role": "ADMIN",
+ *   "role": "admin",
  *   "projects": [],
- *   "isActive": true
+ *   "active": true
  * }
  *
  * // Response
  * {
- *   "id": "7c0e9a5d-8e1f-4f7b-a53d-36c9f3e7a6b8",
- *   "fullName": "Jane Smith",
- *   "email": "jane@example.com",
- *   "username": "janesmith",
- *   "role": "ADMIN",
- *   "projects": [],
- *   "isActive": true
- * }
+ * 	 "id": "339cbaac-2731-47a6-b0bb-e68be14addb9",
+ * 	 "email": "jane@example.com",
+ * 	 "fullname": "Jane Smith",
+ * 	 "username": "janesmith",
+ * 	 "role": "user",
+ * 	 "projects": [
+ * 		 "1e7b566f-27c3-41c9-9a42-a10e3231671c"
+ * 	 ],
+ * 	 "active": true,
+ * 	 "avatar": "https://ui-avatars.com/api/?name=PR&background=4e73df&color=fff",
+ * 	 "notes": null,
+ * 	 "created_at": "2016-08-17",
+ * 	 "updated_at": null
+ *  }
  */
-router.post('/', createUserController);
+router.post("/", createUserController);
 
 /**
  * @route PUT /users/:id
@@ -103,19 +127,19 @@ router.post('/', createUserController);
  * Content-Type: application/json
  *
  * {
- *   "fullName": "Jane Doe",
- *   "isActive": false
+ *   "fullname": "Jane Doe",
+ *   "active": false
  * }
  *
  * // Response (success)
  * {
  *   "id": "7c0e9a5d-8e1f-4f7b-a53d-36c9f3e7a6b8",
- *   "fullName": "Jane Doe",
+ *   "fullname": "Jane Doe",
  *   "email": "jane@example.com",
  *   "username": "janesmith",
  *   "role": "ADMIN",
  *   "projects": [],
- *   "isActive": false
+ *   "active": false
  * }
  *
  * // Response (not found)
@@ -123,7 +147,7 @@ router.post('/', createUserController);
  *   "message": "User not found"
  * }
  */
-router.put('/:id', updateUserController);
+router.put("/:id", updateUserController);
 
 /**
  * @route DELETE /users/:id
@@ -143,6 +167,6 @@ router.put('/:id', updateUserController);
  *   "message": "User not found"
  * }
  */
-router.delete('/:id', deleteUserController);
+router.delete("/:id", deleteUserController);
 
 module.exports = router;

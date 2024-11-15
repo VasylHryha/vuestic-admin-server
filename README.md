@@ -62,6 +62,11 @@ This project implements a RESTful API for managing user data. It provides endpoi
 - `POST /users`: Create a new user.
 - `PUT /users/:id`: Update an existing user.
 - `DELETE /users/:id`: Delete a user.
+- `GET /projects`: Retrieve a list of projects with pagination support.
+- `GET /projects/:id`: Retrieve a single project by ID.
+- `POST /projects`: Create a new project.
+- `PUT /projects/:id`: Update an existing project.
+- `DELETE /projects/:id`: Delete a project.
 
 More details see in `route/` folder
 
@@ -88,6 +93,7 @@ More details see in `route/` folder
    ```
 
 3. The server will start on the port specified in the `PORT` environment variable or default to port 3000.
+4. To work with the local DB you'll need to use the (Supabase cli)[https://supabase.com/docs/reference/cli/introduction]
 
 ## Deployment
 
@@ -96,12 +102,17 @@ This project is configured for deployment on Vercel as temporary solution. The `
 ## Environment Variables
 
 - `PORT`: The port on which the server will run (default: 3000)
+- `SUPABASE_URL`: The unique Supabase URL which is supplied when you create a new project in your project dashboard.
+- `SUPABASE_KEY`: The unique Supabase Key which is supplied when you create a new project in your project dashboard.
+
 
 ## Dependencies
 
 - express: Web application framework
 - dotenv: For loading environment variables
-- body-parser: Middleware for parsing request bodies
-- uuid: For generating unique identifiers
+
+## Dev Dependencies
+
+- supabase: For running the Supabase stack on your machine
 
 For a complete list of dependencies, refer to the `package.json` file.

@@ -1,9 +1,9 @@
 const supabase = require("./setup.js");
-const User = require("../../models/User.js");
+const Project = require("../../models/Project.js");
 
-const TABLE = "users";
+const TABLE = "projects";
 
-const getAllUsers = async () => {
+const getAllProjects = async () => {
 	const { data, error } = await supabase
 		.from(TABLE)
 		.select()
@@ -14,7 +14,7 @@ const getAllUsers = async () => {
 	throw error;
 };
 
-const getUserById = async (id) => {
+const getProjectById = async (id) => {
 	const { data, error } = await supabase
 		.from(TABLE)
 		.select()
@@ -26,8 +26,8 @@ const getUserById = async (id) => {
 	throw error;
 };
 
-const createUser = async (userData) => {
-	const user = new User(userData);
+const createProject = async (project) => {
+	const user = new Project(project);
 
 	const { data, error } = await supabase.from(TABLE).insert(user).select();
 
@@ -36,10 +36,10 @@ const createUser = async (userData) => {
 	throw error;
 };
 
-const updateUser = async (id, userData) => {
+const updateProject = async (id, project) => {
 	const { data, error } = await supabase
 		.from(TABLE)
-		.update(userData)
+		.update(project)
 		.eq("id", id)
 		.select();
 
@@ -48,7 +48,7 @@ const updateUser = async (id, userData) => {
 	throw error;
 };
 
-const deleteUser = async (id) => {
+const deleteProject = async (id) => {
 	const { error } = await supabase.from(TABLE).delete().eq("id", id);
 
 	if (!error) return true;
@@ -57,9 +57,9 @@ const deleteUser = async (id) => {
 };
 
 module.exports = {
-	getAllUsers,
-	getUserById,
-	createUser,
-	updateUser,
-	deleteUser,
+	getAllProjects,
+	getProjectById,
+	createProject,
+	updateProject,
+	deleteProject,
 };
