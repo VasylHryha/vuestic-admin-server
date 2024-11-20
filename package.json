@@ -1,31 +1,42 @@
 {
-  "name": "nodejs-playground",
+  "name": "vuestic-admin-server",
   "version": "1.0.0",
   "main": "app.js",
+  "module": "true",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
     "dev-debug": "node --inspect app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "db:seed": "node scripts/seedDB.js && supabase db reset"
-  },
+    "db:reset": "supabase db reset",
+		"update-types": "supabase gen types --lang=typescript --local > database.types.ts"
+	},
   "keywords": [],
-  "author": "",
+  "author": "Epicmax",
   "license": "ISC",
-  "description": "",
+  "description": "Server to power the Vuestic Admin",
   "dependencies": {
     "@supabase/supabase-js": "^2.45.4",
     "body-parser": "^1.20.3",
+    "compression": "^1.7.5",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^5.0.1",
-    "pino": "^9.5.0",
-    "uuid": "^10.0.0"
-  },
+    "helmet": "^8.0.0",
+    "pino": "^9.5.0"
+	},
   "engines": {
     "node": "20.x"
   },
   "devDependencies": {
+    "@eslint/js": "^9.14.0",
+    "eslint": "^9.14.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.12.0",
     "nodemon": "^3.1.4",
+    "prettier": "^3.3.3",
     "supabase": "^1.192.5"
   }
 }

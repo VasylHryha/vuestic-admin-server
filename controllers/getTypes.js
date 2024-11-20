@@ -6,8 +6,10 @@ const getTypes = async (req, res) => {
 
 		res.json(result);
 	} catch (error) {
-		res.status(500).json({ message: 'Error fetching enum_type: ', error: error.message });
+		res
+			.status(500)
+			.json({ message: "Error fetching enum_type: ", error: error.message });
 	}
 };
 
-module.exports = getTypes
+module.exports = getTypes;
