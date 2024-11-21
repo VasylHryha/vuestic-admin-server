@@ -1,5 +1,6 @@
 const express = require("express");
 const pino = require("pino");
+require("dotenv").config();
 
 const bodyParser = require("body-parser");
 
@@ -30,6 +31,7 @@ app.use((req, res, next) => {
 });
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(router);
 
 app.listen(PORT, () => {

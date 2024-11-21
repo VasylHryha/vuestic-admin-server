@@ -9,8 +9,8 @@
     "dev-debug": "node --inspect app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "db:reset": "supabase db reset",
-		"update-types": "supabase gen types --lang=typescript --local > database.types.ts"
-	},
+    "update-types": "supabase gen types --lang=typescript --local > database.types.ts"
+  },
   "keywords": [],
   "author": "Epicmax",
   "license": "ISC",
@@ -24,8 +24,9 @@
     "dotenv": "^16.4.5",
     "express": "^5.0.1",
     "helmet": "^8.0.0",
+    "multer": "^1.4.5-lts.1",
     "pino": "^9.5.0"
-	},
+  },
   "engines": {
     "node": "20.x"
   },

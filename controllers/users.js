@@ -1,4 +1,5 @@
 const usersModel = require("../db/supabase/users.js");
+const getStatusFromError = require("../utils/getStatusFromError");
 
 const getUsersController = async (req, res) => {
 	try {
@@ -26,9 +27,7 @@ const getUsersController = async (req, res) => {
 const getSingleUserController = async (req, res) => {
 	try {
 		const user = await usersModel.getUserById(req.params.id);
-		if (!user) {
-			return res.status(404).json({ message: "User not found" });
-		}
+
 		res.json(user);
 	} catch (error) {
 		res
@@ -40,10 +39,13 @@ const getSingleUserController = async (req, res) => {
 const createUserController = async (req, res) => {
 	try {
 		const newUser = await usersModel.createUser(req.body);
+
 		res.status(201).json(newUser);
 	} catch (error) {
+		const status = getStatusFromError(error);
+
 		res
-			.status(500)
+			.status(status)
 			.json({ message: "Error creating user", error: error.message });
 	}
 };
@@ -51,24 +53,22 @@ const createUserController = async (req, res) => {
 const updateUserController = async (req, res) => {
 	try {
 		const updatedUser = await usersModel.updateUser(req.params.id, req.body);
-		if (!updatedUser) {
-			return res.status(404).json({ message: "User not found" });
-		}
+
 		res.json(updatedUser);
 	} catch (error) {
+		const status = getStatusFromError(error);
+
 		res
-			.status(500)
+			.status(status)
 			.json({ message: "Error updating user", error: error.message });
 	}
 };
 
 const deleteUserController = async (req, res) => {
 	try {
-		const deleted = await usersModel.deleteUser(req.params.id);
-		if (!deleted) {
-			return res.status(404).json({ message: "User not found" });
-		}
-		res.status(204).send();
+		const result = await usersModel.deleteUser(req.params.id);
+
+		res.status(204).send(result);
 	} catch (error) {
 		res
 			.status(500)

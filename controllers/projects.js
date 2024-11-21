@@ -1,4 +1,5 @@
 const projectsModel = require("../db/supabase/projects.js");
+const getStatusFromError = require("../utils/getStatusFromError");
 
 const getProjectsController = async (req, res) => {
 	try {
@@ -26,9 +27,7 @@ const getProjectsController = async (req, res) => {
 const getSingleProjectController = async (req, res) => {
 	try {
 		const project = await projectsModel.getProjectById(req.params.id);
-		if (!project) {
-			return res.status(404).json({ message: "Project not found" });
-		}
+
 		res.json(project);
 	} catch (error) {
 		res
@@ -40,10 +39,12 @@ const getSingleProjectController = async (req, res) => {
 const createProjectController = async (req, res) => {
 	try {
 		const newProject = await projectsModel.createProject(req.body);
+
 		res.status(201).json(newProject);
 	} catch (error) {
+		const status = getStatusFromError(error);
 		res
-			.status(500)
+			.status(status)
 			.json({ message: "Error creating project", error: error.message });
 	}
 };
@@ -54,23 +55,20 @@ const updateProjectController = async (req, res) => {
 			req.params.id,
 			req.body,
 		);
-		if (!updatedProject) {
-			return res.status(404).json({ message: "Project not found" });
-		}
+
 		res.json(updatedProject);
 	} catch (error) {
+		const status = getStatusFromError(error);
 		res
-			.status(500)
+			.status(status)
 			.json({ message: "Error updating project", error: error.message });
 	}
 };
 
 const deleteProjectController = async (req, res) => {
 	try {
-		const deleted = await projectsModel.deleteProject(req.params.id);
-		if (!deleted) {
-			return res.status(404).json({ message: "Project not found" });
-		}
+		await projectsModel.deleteProject(req.params.id);
+
 		res.status(204).send();
 	} catch (error) {
 		res
