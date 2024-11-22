@@ -19,6 +19,15 @@ async function upload(bucket, userId, file) {
 	}
 }
 
+async function remove(bucket, id) {
+	const { error } = supabase.storage.from(bucket).remove([id]);
+
+	if (!error) return true;
+
+	throw new Error(error.message);
+}
+
 module.exports = {
 	upload,
+	remove,
 };
