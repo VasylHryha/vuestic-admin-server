@@ -1,14 +1,14 @@
 const express = require('express');
 const Stripe = require('stripe');
-const cors = require('cors'); // Import the CORS middleware
+const cors = require('cors');
 
 const router = express.Router();
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-	apiVersion: '2020-08-27',
+	apiVersion: '2022-11-15'
 });
 
-const HARD_CODED_CUSTOMER_ID = 'cus_RPmbpSyKY0cF1N'; // Hard-coded customer ID for testing purposes
+const HARD_CODED_CUSTOMER_ID = 'cus_RPmbpSyKY0cF1N';
 
 // Enable CORS for all routes in this router
 router.use(cors()); // Allow cross-origin requests for all routes in this router
@@ -38,7 +38,7 @@ router.get('/payment-method', async (req, res) => {
 
 // Route to remove a payment method
 router.delete('/payment-method/:id', async (req, res) => {
-	const { id } = req.params;
+	const {id} = req.params;
 
 	try {
 		await stripe.paymentMethods.detach(id);
@@ -46,7 +46,7 @@ router.delete('/payment-method/:id', async (req, res) => {
 		res.status(200).json({
 			status: 'success',
 			message: 'Payment method removed successfully.',
-			data: { id },
+			data: {id},
 		});
 	} catch (error) {
 		console.error('Error removing payment method:', error.message);
@@ -60,7 +60,7 @@ router.delete('/payment-method/:id', async (req, res) => {
 
 // Route to attach a payment method to a customer
 router.put('/payment-method', async (req, res) => {
-	const { paymentMethodId } = req.body;
+	const {paymentMethodId} = req.body;
 
 	if (!paymentMethodId) {
 		return res.status(400).json({
@@ -85,6 +85,101 @@ router.put('/payment-method', async (req, res) => {
 		res.status(500).json({
 			status: 'error',
 			message: 'Failed to add payment method.',
+			data: null,
+		});
+	}
+});
+
+
+router.post('/payment-intent', async (req, res) => {
+	try {
+		const {amount, currency, paymentMethod} = req.body
+		const paymentIntent = await stripe.paymentIntents.create({
+			amount,
+			currency,
+			customer: HARD_CODED_CUSTOMER_ID,
+			payment_method: paymentMethod,
+			confirm: true,
+		})
+		res.json(paymentIntent)
+	} catch (error) {
+		res.status(500).json({error: error.message})
+	}
+})
+
+router.post('/payment', async (req, res) => {
+	const {
+		customerId = HARD_CODED_CUSTOMER_ID,
+		paymentMethod,
+		amount,
+		currency = 'usd',
+		description = 'Invoice for custom payment'
+	} = req.body;
+
+	try {
+		// 1. Create and finalize the invoice
+		const invoice = await stripe.invoices.create({
+			customer: customerId,
+			auto_advance: false, // Automatically finalize and charge this invoice
+		});
+
+		// 2. Create an invoice item
+		await stripe.invoiceItems.create({
+			customer: customerId,
+			amount,
+			currency,
+			description,
+			invoice: invoice.id,
+		});
+
+		// 3. Pay the invoice using the specified payment method
+		const paidInvoice = await stripe.invoices.pay(invoice.id, {
+			payment_method: paymentMethod,
+		});
+
+
+		// Respond with the invoice details
+		res.status(200).json({
+			status: 'success',
+			message: 'Payment and invoice processed successfully.',
+			data: {invoice: paidInvoice},
+		});
+	} catch (error) {
+		console.error('Error processing payment and invoice:', error.message);
+		res.status(500).json({
+			status: 'error',
+			message: 'Failed to process payment and invoice.',
+			data: null,
+		});
+	}
+});
+
+
+// Route to fetch invoices with pagination (10 per page)
+router.get('/invoices', async (req, res) => {
+	try {
+		const {starting_after} = req.query; // Get the starting_after parameter from query params
+
+		// Use Stripe's invoices.list API to retrieve the invoices
+		const invoices = await stripe.invoices.list({
+			customer: HARD_CODED_CUSTOMER_ID,
+			limit: 10, // Get only 10 invoices per request
+			starting_after: starting_after || undefined, // If starting_after is provided, use it
+		});
+
+		res.status(200).json({
+			status: 'success',
+			message: 'Invoices retrieved successfully.',
+			data: {
+				invoices: invoices.data,
+				has_more: invoices.has_more, // Check if there are more invoices to paginate
+			},
+		});
+	} catch (error) {
+		console.error('Error fetching invoices:', error.message);
+		res.status(500).json({
+			status: 'error',
+			message: 'Failed to fetch invoices.',
 			data: null,
 		});
 	}
