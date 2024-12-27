@@ -2,13 +2,13 @@ const express = require('express');
 const Stripe = require('stripe');
 const cors = require('cors');
 
+const { HARD_CODED_CUSTOMER_ID } = require('../constants');
+
 const router = express.Router();
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 	apiVersion: '2022-11-15'
 });
-
-const HARD_CODED_CUSTOMER_ID = 'cus_RPmbpSyKY0cF1N';
 
 // Enable CORS for all routes in this router
 router.use(cors()); // Allow cross-origin requests for all routes in this router
@@ -84,7 +84,7 @@ router.put('/payment-method', async (req, res) => {
 		console.error('Error adding payment method:', error.message);
 		res.status(500).json({
 			status: 'error',
-			message: 'Failed to add payment method.',
+			message: error.message,
 			data: null,
 		});
 	}
@@ -148,7 +148,7 @@ router.post('/payment', async (req, res) => {
 		console.error('Error processing payment and invoice:', error.message);
 		res.status(500).json({
 			status: 'error',
-			message: 'Failed to process payment and invoice.',
+			message: error.message,
 			data: null,
 		});
 	}
@@ -179,7 +179,7 @@ router.get('/invoices', async (req, res) => {
 		console.error('Error fetching invoices:', error.message);
 		res.status(500).json({
 			status: 'error',
-			message: 'Failed to fetch invoices.',
+			message: error.message,
 			data: null,
 		});
 	}

@@ -1,0 +1,1 @@
+exports.HARD_CODED_CUSTOMER_ID = 'cus_RPmbpSyKY0cF1N';
